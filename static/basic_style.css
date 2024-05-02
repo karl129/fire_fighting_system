@@ -1,0 +1,42 @@
+.spa-ico {
+    background: #316cf4;
+    text-align: center;
+    width: 62px;
+    height: 62px;
+    margin: -16px auto 0;
+    border: 1px solid #316cf4;
+    border-radius: 8px;
+}
+
+.lbox {
+    margin: 20px 0px;
+    vertical-align: middle;
+    box-shadow: 0px 0px 10px #F0F0F0;
+
+}
+
+.nei {
+    box-shadow: 0px 0px 48px #316cf4 inset;
+    border: 1px solid #316cf4;
+}
+
+.headline {
+
+    line-height: 50px;
+    border-top: solid #316cf4;
+    border-left: 25px solid transparent;
+    border-right: 25px solid transparent;
+    font-family: '微软雅黑';
+    font-size: 24px;
+    text-align: center;
+    color: white;
+    vertical-align: middle;
+    cursor: pointer;
+    letter-spacing: 0;
+    text-shadow: 0px 1px 0px #999, 0px 2px 0px #888, 0px 3px 0px #777, 0px 4px 0px #666, 0px 5px 0px #555, 0px 6px 0px #444, 0px 7px 0px #333, 0px 8px 7px #001135
+}
+
+.row {
+    margin-right: 0px;
+    margin-left: 0px;
+}
