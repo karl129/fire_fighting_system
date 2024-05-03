@@ -12,7 +12,7 @@ option1 = {
     },
     legend: {
         data: ['位置1', '位置2', '位置3', '位置4'] // 假设有5个位置
-},
+    },
     grid: {
         left: '3%',
         right: '4%',
@@ -68,7 +68,18 @@ function updateData() {
     for (let i = 0; i < 5; i++) {
         newData.push(Math.floor(Math.random() * 10)); // 随机生成一氧化碳浓度数据
     }
+    const maxCO = Math.max(...newData); // 获取数组 newData 的最大值
 
+    if (maxCO >= 9) {
+        const alertDiv = document.getElementById('alertDiv');
+        let alert = document.createElement('p');
+        // 加上当前时间日期信息
+        let now = new Date();
+        let nowStr = now.toLocaleString();
+        alert.innerHTML = nowStr + '：一氧化碳浓度过高，请注意！';
+        // 加在前面
+        alertDiv.insertBefore(alert, alertDiv.firstChild);
+    }
     // 更新 xAxis 的数据，这里假设为星期，你可以根据实际情况修改
     const now = new Date();
     const days = ['1', '2', '3', '4', '5', '6', '7'];
@@ -220,6 +231,19 @@ function generateRandomNumber(min, max) {
 
 setInterval(function () {
     const random = +(generateRandomNumber(0.8, 0.9) * 45).toFixed(2);
+
+    if (random > 40) {
+        const alertdiv = document.getElementById('alertDiv');
+        let alert = document.createElement('p');
+        // 加上当前时间日期信息
+        let now = new Date();
+        let nowStr = now.toLocaleString();
+        alert.innerHTML = nowStr + '：设备温度过高，请注意！';
+        // 加在前面
+        alertdiv.insertBefore(alert, alertdiv.firstChild);
+    }
+
+
     myChart2.setOption({
         series: [
             {
@@ -435,13 +459,29 @@ function generateDataWithFluctuation(dataArray) {
 
 
 setInterval(function () {
-    const random = +(Math.random() * 45).toFixed(2);
+
+    const new_data = generateDataWithFluctuation(originalData);
+
+    // 检查是否有设备功率超过额定功率
+    for (let i = 0; i < new_data.length; i++) {
+        if (new_data[i] > originalData[i] * 1.18) {
+            const alertDiv = document.getElementById('alertDiv');
+            let alert = document.createElement('p');
+            // 加上当前时间日期信息
+            let now = new Date();
+            let nowStr = now.toLocaleString();
+            alert.innerHTML = nowStr + '：设备' + (6 - i) + '功率超过额定功率120%，请注意！';
+            // 加在前面
+            alertDiv.insertBefore(alert, alertDiv.firstChild);
+        }
+    }
+
     myChart4.setOption({
         series: [
             {
                 name: '实际功率',
                 type: 'bar',
-                data: generateDataWithFluctuation(originalData)
+                data: new_data
             },
             {
                 name: '额定功率',
@@ -453,3 +493,18 @@ setInterval(function () {
 }, 1000);
 
 option4 && myChart4.setOption(option4);
+
+
+// 设置定时器，每隔一定时间检查警告信息数量
+setInterval(function () {
+    const alertDiv = document.getElementById('alertDiv');
+    const alertMessages = alertDiv.getElementsByTagName('p');
+
+    // 如果警告信息数量超过100条，保留最新的100条
+    if (alertMessages.length > 100) {
+        // 删除多余的警告信息
+        while (alertMessages.length > 100) {
+            alertDiv.removeChild(alertMessages[0]);
+        }
+    }
+}, 60000); // 每隔60秒检查一次
