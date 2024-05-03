@@ -27,7 +27,17 @@ def init_db():
 
     with current_app.open_resource('schema.sql') as f:
         db.executescript(f.read().decode('utf8'))
+    
+    # 插入初始设备数据
+    equipment_data = [
+        ('温度检测器', '用于检测温度', 0),
+        ('一氧化碳浓度检测器', '用于检测一氧化碳浓度', 0),
+        ('功率检测器', '用于检测功率', 0)
+    ]
+    db.executemany('INSERT INTO equipment (name, description, status) VALUES (?, ?, ?)', equipment_data)
 
+    # 提交事务
+    db.commit()
 
 @click.command('init-db')
 def init_db_command():

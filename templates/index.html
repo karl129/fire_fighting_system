@@ -5,10 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>消防管理系统</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
-        crossorigin="anonymous">
+    <link href="../static/bootstrap.min.css" rel="stylesheet">
+
     <!-- Echart 扩展 -->
     <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+    <script src="../static/echarts.js"></script>
     <link rel="stylesheet" href="../static/basic_style.css">
 
 </head>
@@ -16,7 +17,7 @@
 <body style="overflow:hidden;background:url(../static/bg.jpg);background-repeat: repeat;">
     <nav class="navbar navbar-expand-sm bg-primary" data-bs-theme="dark">
         <div class="container-fluid">
-            <a id="openvideo" class="headline" href="index.html">消防管理系统</a>
+            <a id="openvideo" class="headline" href="/home">消防管理系统</a>
             <!-- <a class="navbar-brand" href="#">消防管理系统</a> -->
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -28,11 +29,13 @@
                         <a class="nav-link active" aria-current="page" href="#">展示</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="equipment.html">设备管理</a>
+                        <a class="nav-link" href="/equipment">设备管理</a>
                     </li>
+                    {% if current_username == "admin" %}
                     <li class="nav-item">
-                        <a class="nav-link" href="admin.html">人员管理</a>
+                        <a class="nav-link" href="{{ url_for('admin.admin') }}">人员管理</a>
                     </li>
+                    {% endif %}
                 </ul>
                 <a href={{ url_for('auth.logout') }} class="btn btn-light ms-5">注销</a>
             </div>
@@ -47,8 +50,13 @@
                         <i class="fa fa-tasks" aria-hidden="true"></i>一氧化碳浓度<span>
 
                 </div>
+                {% if eq_list[0].status == 1 %}
                 <div id="echartsDiv1" style="width:100; height: 40vh;"></div>
+                {% elif eq_list[0].status == 0 %}
+                <div id="echartsDiv1" hidden style="width:100; height:40vh;"></div>
+                <div style="width:100; height:40vh;"></div>
 
+                {% endif %}
             </div>
             <div class="lbox nei">
                 <div class="spa-ico" style="width:160px;height:30px;">
@@ -56,7 +64,12 @@
                         <i class="fa fa-tasks" aria-hidden="true"></i>最高温度<span>
 
                 </div>
+                {% if eq_list[1].status == 1 %}
                 <div id="echartsDiv2" style="width:100;height: 40vh"></div>
+                {% elif eq_list[1].status == 0 %}
+                <div id="echartsDiv2" hidden style="width:100;height: 40vh"></div>
+                <div style="width:100%;height: 40vh"></div>
+                {% endif %}
 
             </div>
 
@@ -68,7 +81,6 @@
                         <i class="fa fa-tasks" aria-hidden="true"></i>灭火装置分布情况<span>
                 </div>
                 <div id="echartsDiv3" style="width:100%;height: 85vh"></div>
-
             </div>
         </div>
 
@@ -79,14 +91,18 @@
                         <i class="fa fa-tasks" aria-hidden="true"></i>设备功率<span>
 
                 </div>
+                {% if eq_list[2].status == 1 %}
                 <div id="echartsDiv4" style="width:100%; height: 85vh;"></div>
+                {% elif eq_list[2].status == 0 %}
+                <div id="echartsDiv4" hidden style="width:100%; height: 85vh;"></div>
+                <div style="width:100%; height: 85vh;"></div>
+                {% endif %}
 
             </div>
 
         </div>
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
-            crossorigin="anonymous"></script>
+        <script src="../static/bootstrap.bundle.min.js"></script>
         <script src="../static/jquery-3.7.1.min.js"></script>
         <script src="../static/charts.js"></script>
 </body>

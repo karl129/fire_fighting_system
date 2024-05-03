@@ -61,6 +61,8 @@ def login():
         if error is None:
             session.clear()
             session['user_id'] = user['id']
+            session['username'] = user['username']  # 将用户名存储在 session 中
+
             return redirect(url_for('home'))
 
         flash(error)

@@ -90,7 +90,7 @@ function updateData() {
 }
 
 // 每两秒更新一次数据
-setInterval(updateData, 2000);
+setInterval(updateData, 1000);
 
 // 初始化时设置一次数据
 updateData();
