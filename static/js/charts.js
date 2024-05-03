@@ -127,8 +127,6 @@ updateData();
 
 
 
-
-
 // 数据 2
 let chartDom2 = document.getElementById('echartsDiv2');
 let myChart2 = echarts.init(chartDom2);
@@ -291,7 +289,7 @@ option2 && myChart2.setOption(option2);
 
 
 
-const ROOT_PATH = '../static';
+const ROOT_PATH = '../static/imgs';
 
 const chartDom3 = document.getElementById('echartsDiv3');
 const myChart3 = echarts.init(chartDom3);
