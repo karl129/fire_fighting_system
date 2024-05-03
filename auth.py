@@ -44,6 +44,11 @@ def register():
 # 登录
 @auth_bp.route('/', methods=('GET', 'POST'))
 def login():
+    # 检查是否有会话
+    is_login = session.get('user_id')
+    if is_login:
+        return redirect(url_for('home'))
+
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
