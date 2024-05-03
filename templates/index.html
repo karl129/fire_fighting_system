@@ -72,9 +72,9 @@
                         <i class="fa fa-tasks" aria-hidden="true"></i>一氧化碳浓度<span>
 
                 </div>
-                {% if eq_list[0].status == 1 %}
+                {% if eq_status['一氧化碳浓度检测器'] == 1 and eq_nums['一氧化碳浓度检测器'] > 0 %}
                 <div id="echartsDiv1" style="width:100; height: 40vh;"></div>
-                {% elif eq_list[0].status == 0 %}
+                {% else %}
                 <div id="echartsDiv1" hidden style="width:100; height:40vh;"></div>
                 <div style="width:100; height:40vh;"></div>
 
@@ -86,9 +86,9 @@
                         <i class="fa fa-tasks" aria-hidden="true"></i>最高温度<span>
 
                 </div>
-                {% if eq_list[1].status == 1 %}
+                {% if eq_status['温度检测器'] == 1 and eq_nums['温度检测器'] > 0 %}
                 <div id="echartsDiv2" style="width:100;height: 40vh"></div>
-                {% elif eq_list[1].status == 0 %}
+                {% else %}
                 <div id="echartsDiv2" hidden style="width:100;height: 40vh"></div>
                 <div style="width:100%;height: 40vh"></div>
                 {% endif %}
@@ -96,6 +96,9 @@
             </div>
 
         </div>
+        <div id="eq_nums" data-flask-param="{{ eq_nums | safe }}" hidden></div>
+        <div id="eq_status" data-flask-param="{{ eq_status | safe }}" hidden></div>
+
         <div class="col-sm-6">
             <div class="lbox nei">
                 <div class="spa-ico" style="width:280px;height:30px;">
@@ -111,9 +114,11 @@
                 </div>
                 <div class="alert-danger fs-5 text-danger" id="alertDiv"
                     style="width:100%;height: 15vh; text-align: center; overflow-y: scroll;" role="alert">
+                    <p>暂无预警信息</p>
 
                 </div>
             </div>
+
         </div>
 
         <div class="col-md-3 ">
@@ -123,9 +128,9 @@
                         <i class="fa fa-tasks" aria-hidden="true"></i>设备功率<span>
 
                 </div>
-                {% if eq_list[2].status == 1 %}
+                {% if eq_status['功率检测器'] == 1 and eq_nums['功率检测器'] > 0 %}
                 <div id="echartsDiv4" style="width:100%; height: 85vh;"></div>
-                {% elif eq_list[2].status == 0 %}
+                {% else %}
                 <div id="echartsDiv4" hidden style="width:100%; height: 85vh;"></div>
                 <div style="width:100%; height: 85vh;"></div>
                 {% endif %}

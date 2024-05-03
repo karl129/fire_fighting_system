@@ -27,11 +27,12 @@ def create_app(test_config=None):
     def hello():
         return 'Hello, World!'
     
-    from equipment import get_eq_list
+    from equipment import get_eq_list, get_eq_nums
     @app.route('/home')
     def home():
+        eq_nums, eq_status = get_eq_nums()
         current_username = session.get('username')  # 获取当前登录用户的用户名
-        return render_template('index.html', eq_list=get_eq_list(), current_username=current_username)
+        return render_template('index.html', eq_list=get_eq_list(), current_username=current_username, eq_nums=eq_nums, eq_status=eq_status)
     
     # 数据库
     import db

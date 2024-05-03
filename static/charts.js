@@ -1,3 +1,4 @@
+// 数据 1
 const myChart1 = echarts.init(document.getElementById('echartsDiv1'));
 
 let option1;
@@ -61,6 +62,19 @@ option1 = {
     ]
 };
 
+function getEqdata() {
+    return fetch('/get_eq_data')
+        .then(response => response.json())
+        .then(data => {
+            return {
+                eqNums: data.eq_nums,
+                eqStatus: data.eq_status
+            };
+        })
+        .catch(error => console.error('Error:', error));
+}
+
+
 // 更新数据的函数
 function updateData() {
     // 模拟从服务器获取数据，这里用随机数代替
@@ -70,15 +84,20 @@ function updateData() {
     }
     const maxCO = Math.max(...newData); // 获取数组 newData 的最大值
 
+    // 如果一氧化碳浓度超过9，且一氧化碳浓度检测器数量大于0且状态为1（正常）
     if (maxCO >= 9) {
-        const alertDiv = document.getElementById('alertDiv');
-        let alert = document.createElement('p');
-        // 加上当前时间日期信息
-        let now = new Date();
-        let nowStr = now.toLocaleString();
-        alert.innerHTML = nowStr + '：一氧化碳浓度过高，请注意！';
-        // 加在前面
-        alertDiv.insertBefore(alert, alertDiv.firstChild);
+        getEqdata().then(({ eqNums, eqStatus }) => {
+            if (eqNums['一氧化碳浓度检测器'] > 0 && eqStatus['一氧化碳浓度检测器'] == 1) {
+                const alertDiv = document.getElementById('alertDiv');
+                let alert = document.createElement('p');
+                // 加上当前时间日期信息
+                let now = new Date();
+                let nowStr = now.toLocaleString();
+                alert.innerHTML = nowStr + '：一氧化碳浓度过高，请注意！';
+                // 加在前面
+                alertDiv.insertBefore(alert, alertDiv.firstChild);
+            }
+        });
     }
     // 更新 xAxis 的数据，这里假设为星期，你可以根据实际情况修改
     const now = new Date();
@@ -233,14 +252,18 @@ setInterval(function () {
     const random = +(generateRandomNumber(0.8, 0.9) * 45).toFixed(2);
 
     if (random > 40) {
-        const alertdiv = document.getElementById('alertDiv');
-        let alert = document.createElement('p');
-        // 加上当前时间日期信息
-        let now = new Date();
-        let nowStr = now.toLocaleString();
-        alert.innerHTML = nowStr + '：设备温度过高，请注意！';
-        // 加在前面
-        alertdiv.insertBefore(alert, alertdiv.firstChild);
+        getEqdata().then(({ eqNums, eqStatus }) => {
+            if (eqNums['温度检测器'] > 0 && eqStatus['温度检测器'] == 1) {
+                const alertDiv = document.getElementById('alertDiv');
+                let alert = document.createElement('p');
+                // 加上当前时间日期信息
+                let now = new Date();
+                let nowStr = now.toLocaleString();
+                alert.innerHTML = nowStr + '：温度过高，请注意！';
+                // 加在前面
+                alertDiv.insertBefore(alert, alertDiv.firstChild);
+            }
+        });
     }
 
 
@@ -464,15 +487,20 @@ setInterval(function () {
 
     // 检查是否有设备功率超过额定功率
     for (let i = 0; i < new_data.length; i++) {
+
         if (new_data[i] > originalData[i] * 1.18) {
-            const alertDiv = document.getElementById('alertDiv');
-            let alert = document.createElement('p');
-            // 加上当前时间日期信息
-            let now = new Date();
-            let nowStr = now.toLocaleString();
-            alert.innerHTML = nowStr + '：设备' + (6 - i) + '功率超过额定功率120%，请注意！';
-            // 加在前面
-            alertDiv.insertBefore(alert, alertDiv.firstChild);
+            getEqdata().then(({ eqNums, eqStatus }) => {
+                if (eqNums['功率检测器'] > 0 && eqStatus['功率检测器'] == 1) {
+                    const alertDiv = document.getElementById('alertDiv');
+                    let alert = document.createElement('p');
+                    // 加上当前时间日期信息
+                    let now = new Date();
+                    let nowStr = now.toLocaleString();
+                    alert.innerHTML = nowStr + '：设备' + (6 - i) + '功率过高，请注意！';
+                    // 加在前面
+                    alertDiv.insertBefore(alert, alertDiv.firstChild);
+                }
+            });
         }
     }
 

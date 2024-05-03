@@ -38,18 +38,26 @@
         </div>
     </nav>
 
-    <div class="container w-50 mt-5 bg-light">
+    <div class="container w-50 h-50 mt-5 bg-light">
+
+        <div class="bg-primary fs-3 text-center w-50 text-white">设备状态管理</div>
+
         <ul class="list-group">
             <!-- jinjia2渲染eq_list -->
             {% for eq in eq_list %}
+            {% if eq.account %}
             <form class="row g-3 w-100 m-2 eqForm" action="/eq_status" method="post">
                 <div class="col-auto w-25">
                     <label for="staticEmail2" class="visually-hidden">name</label>
-                    <input type="text" readonly class="form-control-plaintext" id="staticEmail2" value="{{ eq.name }}">
+                    <input type="text" readonly class="form-control-plaintext fw-bold" id="staticEmail2"
+                        value="{{ eq.name }}">
                     <!-- 隐藏的 input 元素，用于提交 eq_id -->
                     <input type="hidden" name="eq_id" value="{{ eq.id }}">
                 </div>
-                <div class="col-auto w-50">
+                <div class="col-auto w-25">
+                    <input type="text" readonly class="form-control-plaintext" value="设备数量：{{ eq.account }}">
+                </div>
+                <div class="col-auto w-25">
                     <select class="form-select" aria-label="Default select example" name="new_status" required>
                         <option selected disabled>{{ status_map[eq.status] }}</option>
                         {% if eq.status == 0 %}
@@ -60,11 +68,62 @@
                     </select>
                 </div>
                 <div class="col-auto w-25">
-                    <button type="submit" class="btn btn-primary mb-3">提交修改</button>
+                    <button type="submit" class="btn btn-primary mb-3 ctrl_btns">提交修改</button>
                 </div>
             </form>
+            {% endif %}
             {% endfor %}
         </ul>
+    </div>
+
+    <div>
+        <div class="container w-50 h-50 h-50 mt-5 bg-light">
+            <!-- 添加设备 -->
+            <div class="bg-primary fs-3 text-center w-50 text-white">添加/删除设备</div>
+
+            <form class="row w-100 g-3 m-2 eqForm" action="add_eq" method="post">
+                <div class="col-auto w-25">
+                    <select class="form-select" aria-label="Default select example" name="eq_name" required>
+                        <option selected disabled>选择要添加的设备</option>
+                        <option value="温度检测器">温度检测器</option>
+                        <option value="一氧化碳浓度检测器">一氧化碳浓度检测器</option>
+                        <option value="功率检测器">功率检测器</option>
+                    </select>
+                </div>
+
+                <div class="col-auto w-25">
+                    <input class="w-100" type="number" name="eq_num" placeholder="添加设备数量" min="1" required>
+                </div>
+                <div class="col-auto w-25">
+                    <input type="text" name="eq_note" placeholder="备注信息">
+                </div>
+                <div class="col-auto w-25">
+                    <button type="submit" class="btn btn-info mb-3 ctrl_btns">添加设备</button>
+                </div>
+            </form>
+
+
+            <form class="row w-100 g-3 m-2 eqForm" action="delete_ep" method="post">
+                <div class="col-auto w-25">
+                    <select class="form-select" aria-label="Default select example" name="eq_name" required
+                        onchange="updateMaxNum()" id="eq_name">
+                        <option selected disabled>选择要删除的设备</option>
+                        <option value="温度检测器">温度检测器</option>
+                        <option value="一氧化碳浓度检测器">一氧化碳浓度检测器</option>
+                        <option value="功率检测器">功率检测器</option>
+                    </select>
+                </div>
+                <div class="col-auto w-25">
+                    <input class="w-100" type="number" name="eq_num" id="eq_num" placeholder="删除设备数量" min="1" required>
+                </div>
+                <div class="col-auto w-25">
+                    <input type="text" name="eq_note" placeholder="备注信息">
+                </div>
+                <div class="col-auto w-25">
+                    <button type="submit" class="btn btn-danger mb-3 ctrl_btns">删除设备</button>
+                </div>
+            </form>
+        </div>
     </div>
 
     <script src="../static/bootstrap.bundle.min.js"></script>
@@ -78,7 +137,7 @@
             forms.forEach(function (form) {
                 // 获取当前表单中的选择框和提交按钮
                 const selectElement = form.querySelector('.form-select');
-                const submitButton = form.querySelector('.btn-primary');
+                const submitButton = form.querySelector('.ctrl_btns');
 
                 // 初始化时禁用提交按钮
                 submitButton.disabled = true;
@@ -93,6 +152,21 @@
                     }
                 });
             });
+        });
+
+        function updateMaxNum() {
+            var eqName = document.getElementById("eq_name").value;
+            var maxNum = eqNums[eqName];
+            document.getElementById("eq_num").setAttribute("max", maxNum);
+        }
+        const eqNums = JSON.parse('{{ eq_nums | tojson | safe }}');
+
+        document.addEventListener('DOMContentLoaded', function () {
+
+            updateMaxNum();
+
+            // 给选择框添加 onchange 事件监听器
+            document.getElementById("eq_name").addEventListener("change", updateMaxNum);
         });
     </script>
 

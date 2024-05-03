@@ -11,5 +11,6 @@ CREATE TABLE equipment (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
     description TEXT NOT NULL,
-    status INTEGER NOT NULL
+    status INTEGER NOT NULL,
+    account INTEGER NOT NULL
 );
