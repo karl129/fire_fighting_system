@@ -1,21 +1,20 @@
-import functools
-
 from flask import (
-    Blueprint, flash, g, redirect, render_template, request, session, url_for
+    Blueprint, redirect, render_template, url_for
 )
-from werkzeug.security import check_password_hash, generate_password_hash
 
 from db import get_db
 
 admin_bp = Blueprint('admin', __name__)
+
 
 def get_user_list():
     db = get_db()
     user_list = db.execute(
         'SELECT * FROM user'
     ).fetchall()
-    
+
     return user_list
+
 
 @admin_bp.route('/admin')
 def admin():

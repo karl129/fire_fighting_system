@@ -1,6 +1,7 @@
 import os
 from flask import Flask, render_template, session
 
+
 def create_app(test_config=None):
     # 创建 app
     app = Flask(__name__, instance_relative_config=True)
@@ -26,25 +27,28 @@ def create_app(test_config=None):
     @app.route('/hello')
     def hello():
         return 'Hello, World!'
-    
+
     from equipment import get_eq_list, get_eq_nums
+
     @app.route('/home')
     def home():
         eq_nums, eq_status = get_eq_nums()
         current_username = session.get('username')  # 获取当前登录用户的用户名
-        return render_template('index.html', eq_list=get_eq_list(), current_username=current_username, eq_nums=eq_nums, eq_status=eq_status)
-    
+        return render_template('index.html',
+                               eq_list=get_eq_list(), current_username=current_username, eq_nums=eq_nums,
+                               eq_status=eq_status)
+
     # 数据库
     import db
     db.init_app(app)
-    
+
     # 登录注册蓝本
     import auth
     app.register_blueprint(auth.auth_bp)
-    
+
     import admin
     app.register_blueprint(admin.admin_bp)
-    
+
     import equipment
     app.register_blueprint(equipment.eq_bp)
 
@@ -53,4 +57,4 @@ def create_app(test_config=None):
 
 if __name__ == '__main__':
     app = create_app()
-    app.run(app=app, host='127.0.0.1', port='5500')
+    app.run(app=app, host='127.0.0.1', port=5500)
