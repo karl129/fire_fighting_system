@@ -1,24 +1,23 @@
-<!doctype html>
+<!DOCTYPE html>
 <title>{% block title %}{% endblock %} - 消防管理系统</title>
-<link rel="stylesheet" href="../static/css/auth_style.css">
+<link rel="stylesheet" href="../static/css/auth_style.css" />
 <nav>
-    <h1>消防管理系统</h1>
-    <ul>
-        {% if g.user %}
-        <li><span>{{ g.user['username'] }}</span>
-        <li><a href="{{ url_for('auth.logout') }}">注销</a>
-            {% else %}
-        <li><a href="{{ url_for('auth.register') }}">注册</a>
-        <li><a href="{{ url_for('auth.login') }}">登录</a>
-            {% endif %}
-    </ul>
+  <h1>消防管理系统</h1>
+  <ul>
+    {% if g.user %}
+    <li><span>{{ g.user['username'] }}</span></li>
+    <li><a href="{{ url_for('auth.logout') }}">注销</a> {% else %}</li>
+
+    <li><a href="{{ url_for('auth.register') }}">注册</a></li>
+    <li>
+      <a href="{{ url_for('auth.login') }}">登录</a>
+      {% endif %}
+    </li>
+  </ul>
 </nav>
 <section class="content">
-    <header>
-        {% block header %}{% endblock %}
-    </header>
-    {% for message in get_flashed_messages() %}
-    <div class="flash">{{ message }}</div>
-    {% endfor %}
-    {% block content %}{% endblock %}
+  <header>{% block header %}{% endblock %}</header>
+  {% for message in get_flashed_messages() %}
+  <div class="flash">{{ message }}</div>
+  {% endfor %} {% block content %}{% endblock %}
 </section>

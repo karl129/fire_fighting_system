@@ -1,146 +1,213 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>消防管理系统</title>
-    <link href="../static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../static/css/bootstrap.min.css" rel="stylesheet" />
 
     <!-- Echart 扩展 -->
     <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
     <script src="../static/js/echarts.js"></script>
-    <link rel="stylesheet" href="../static/css/basic_style.css">
+    <link rel="stylesheet" href="../static/css/basic_style.css" />
 
     <style>
-        /* 隐藏浏览器默认的滚动条 */
-        #alertDiv::-webkit-scrollbar {
-            display: none;
-        }
+      /* 隐藏浏览器默认的滚动条 */
+      #alertDiv::-webkit-scrollbar {
+        display: none;
+      }
 
-        /* 设置滚动条轨道样式 */
-        #alertDiv::-webkit-scrollbar-track {
-            background-color: #f1f1f1;
-        }
+      /* 设置滚动条轨道样式 */
+      #alertDiv::-webkit-scrollbar-track {
+        background-color: #f1f1f1;
+      }
 
-        /* 设置滚动条滑块样式 */
-        #alertDiv::-webkit-scrollbar-thumb {
-            background-color: #888;
-            border-radius: 5px;
-        }
+      /* 设置滚动条滑块样式 */
+      #alertDiv::-webkit-scrollbar-thumb {
+        background-color: #888;
+        border-radius: 5px;
+      }
 
-        /* 设置鼠标悬停在滚动条滑块上的样式 */
-        #alertDiv::-webkit-scrollbar-thumb:hover {
-            background: #555;
-        }
+      /* 设置鼠标悬停在滚动条滑块上的样式 */
+      #alertDiv::-webkit-scrollbar-thumb:hover {
+        background: #555;
+      }
     </style>
-</head>
+  </head>
 
-<body style="overflow:hidden;background:url(../static/imgs/bg.jpg);background-repeat: repeat;">
+  <body
+    style="
+      overflow: hidden;
+      background: url(../static/imgs/bg.jpg);
+      background-repeat: repeat;
+    "
+  >
     <nav class="navbar navbar-expand-sm bg-primary" data-bs-theme="dark">
-        <div class="container-fluid">
-            <a id="openvideo" class="headline" href="/home">消防管理系统</a>
-            <!-- <a class="navbar-brand" href="#">消防管理系统</a> -->
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto"> <!-- 这里添加了 ms-auto 类 -->
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">展示</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/equipment">设备管理</a>
-                    </li>
-                    {% if current_username == "admin" %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('admin.admin') }}">人员管理</a>
-                    </li>
-                    {% endif %}
-                </ul>
-                <a href={{ url_for('auth.logout') }} class="btn btn-light ms-5">注销</a>
-            </div>
+      <div class="container-fluid">
+        <a id="openvideo" class="headline" href="/home">消防管理系统</a>
+        <!-- <a class="navbar-brand" href="#">消防管理系统</a> -->
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <!-- 这里添加了 ms-auto 类 -->
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="#">展示</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/equipment">设备管理</a>
+            </li>
+            {% if current_username == "admin" %}
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('admin.admin') }}"
+                >人员管理</a
+              >
+            </li>
+            {% endif %}
+          </ul>
+          <a href="{{ url_for('auth.logout') }}" class="btn btn-light ms-5"
+            >注销</a
+          >
         </div>
+      </div>
     </nav>
     <div class="row mt-3">
+      <div class="col-md-3">
+        <div class="lbox nei">
+          <div class="spa-ico" style="width: 160px; height: 30px">
+            <span
+              style="
+                color: white;
+                font-weight: bolder;
+                text-align: center;
+                font-size: 16px;
+                line-height: 30px;
+              "
+            >
+              <i class="fa fa-tasks" aria-hidden="true"></i>一氧化碳浓度</span
+            >
+          </div>
+          {% if eq_status['一氧化碳浓度检测器'] == 1 and
+          eq_nums['一氧化碳浓度检测器'] > 0 %}
+          <div id="echartsDiv1" style="width: 100; height: 40vh"></div>
+          {% else %}
+          <div id="echartsDiv1" hidden style="width: 100; height: 40vh"></div>
+          <div style="width: 100; height: 40vh"></div>
 
-        <div class="col-md-3 ">
-            <div class="lbox nei">
-                <div class="spa-ico" style="width:160px;height:30px;">
-                    <span style="color: white;font-weight: bolder;text-align: center;font-size:16px;line-height:30px;">
-                        <i class="fa fa-tasks" aria-hidden="true"></i>一氧化碳浓度<span>
-
-                </div>
-                {% if eq_status['一氧化碳浓度检测器'] == 1 and eq_nums['一氧化碳浓度检测器'] > 0 %}
-                <div id="echartsDiv1" style="width:100; height: 40vh;"></div>
-                {% else %}
-                <div id="echartsDiv1" hidden style="width:100; height:40vh;"></div>
-                <div style="width:100; height:40vh;"></div>
-
-                {% endif %}
-            </div>
-            <div class="lbox nei">
-                <div class="spa-ico" style="width:160px;height:30px;">
-                    <span style="color: white;font-weight: bolder;text-align: center;font-size:16px;line-height:30px;">
-                        <i class="fa fa-tasks" aria-hidden="true"></i>最高温度<span>
-
-                </div>
-                {% if eq_status['温度检测器'] == 1 and eq_nums['温度检测器'] > 0 %}
-                <div id="echartsDiv2" style="width:100;height: 40vh"></div>
-                {% else %}
-                <div id="echartsDiv2" hidden style="width:100;height: 40vh"></div>
-                <div style="width:100%;height: 40vh"></div>
-                {% endif %}
-
-            </div>
-
+          {% endif %}
         </div>
-        <div id="eq_nums" data-flask-param="{{ eq_nums | safe }}" hidden></div>
-        <div id="eq_status" data-flask-param="{{ eq_status | safe }}" hidden></div>
-
-        <div class="col-sm-6">
-            <div class="lbox nei">
-                <div class="spa-ico" style="width:280px;height:30px;">
-                    <span style="color: white;font-weight: bolder;text-align: center;font-size:16px;line-height:30px;">
-                        <i class="fa fa-tasks" aria-hidden="true"></i>灭火装置分布情况<span>
-                </div>
-                <div id="echartsDiv3" style="width:100%;height: 65vh"></div>
-            </div>
-            <div class="lbox nei">
-                <div class="spa-ico" style="width:280px;height:30px;">
-                    <span style="color: white;font-weight: bolder;text-align: center;font-size:16px;line-height:30px;">
-                        <i class="fa fa-tasks" aria-hidden="true"></i>预警信息<span>
-                </div>
-                <div class="alert-danger fs-5 text-danger" id="alertDiv"
-                    style="width:100%;height: 15vh; text-align: center; overflow-y: scroll;" role="alert">
-                    <p>暂无预警信息</p>
-
-                </div>
-            </div>
-
+        <div class="lbox nei">
+          <div class="spa-ico" style="width: 160px; height: 30px">
+            <span
+              style="
+                color: white;
+                font-weight: bolder;
+                text-align: center;
+                font-size: 16px;
+                line-height: 30px;
+              "
+            >
+              <i class="fa fa-tasks" aria-hidden="true"></i>最高温度</span
+            >
+          </div>
+          {% if eq_status['温度检测器'] == 1 and eq_nums['温度检测器'] > 0 %}
+          <div id="echartsDiv2" style="width: 100; height: 40vh"></div>
+          {% else %}
+          <div id="echartsDiv2" hidden style="width: 100; height: 40vh"></div>
+          <div style="width: 100%; height: 40vh"></div>
+          {% endif %}
         </div>
+      </div>
+      <div id="eq_nums" data-flask-param="{{ eq_nums | safe }}" hidden></div>
+      <div
+        id="eq_status"
+        data-flask-param="{{ eq_status | safe }}"
+        hidden
+      ></div>
 
-        <div class="col-md-3 ">
-            <div class="lbox nei">
-                <div class="spa-ico" style="width:160px;height:30px;">
-                    <span style="color: white;font-weight: bolder;text-align: center;font-size:16px;line-height:30px;">
-                        <i class="fa fa-tasks" aria-hidden="true"></i>设备功率<span>
-
-                </div>
-                {% if eq_status['功率检测器'] == 1 and eq_nums['功率检测器'] > 0 %}
-                <div id="echartsDiv4" style="width:100%; height: 85vh;"></div>
-                {% else %}
-                <div id="echartsDiv4" hidden style="width:100%; height: 85vh;"></div>
-                <div style="width:100%; height: 85vh;"></div>
-                {% endif %}
-
-            </div>
-
+      <div class="col-sm-6">
+        <div class="lbox nei">
+          <div class="spa-ico" style="width: 280px; height: 30px">
+            <span
+              style="
+                color: white;
+                font-weight: bolder;
+                text-align: center;
+                font-size: 16px;
+                line-height: 30px;
+              "
+            >
+              <i class="fa fa-tasks" aria-hidden="true"></i
+              >灭火装置分布情况</span
+            >
+          </div>
+          <div id="echartsDiv3" style="width: 100%; height: 65vh"></div>
         </div>
-        <script src="../static/js/bootstrap.bundle.min.js"></script>
-        <script src="../static/js/jquery-3.7.1.min.js"></script>
-        <script src="../static/js/charts.js"></script>
-</body>
+        <div class="lbox nei">
+          <div class="spa-ico" style="width: 280px; height: 30px">
+            <span
+              style="
+                color: white;
+                font-weight: bolder;
+                text-align: center;
+                font-size: 16px;
+                line-height: 30px;
+              "
+            >
+              <i class="fa fa-tasks" aria-hidden="true"></i>预警信息</span
+            >
+          </div>
+          <div
+            class="alert-danger fs-5 text-danger"
+            id="alertDiv"
+            style="
+              width: 100%;
+              height: 15vh;
+              text-align: center;
+              overflow-y: scroll;
+            "
+            role="alert"
+          >
+            <p>暂无预警信息</p>
+          </div>
+        </div>
+      </div>
 
+      <div class="col-md-3">
+        <div class="lbox nei">
+          <div class="spa-ico" style="width: 160px; height: 30px">
+            <span
+              style="
+                color: white;
+                font-weight: bolder;
+                text-align: center;
+                font-size: 16px;
+                line-height: 30px;
+              "
+            >
+              <i class="fa fa-tasks" aria-hidden="true"></i>设备功率</span
+            >
+          </div>
+          {% if eq_status['功率检测器'] == 1 and eq_nums['功率检测器'] > 0 %}
+          <div id="echartsDiv4" style="width: 100%; height: 85vh"></div>
+          {% else %}
+          <div id="echartsDiv4" hidden style="width: 100%; height: 85vh"></div>
+          <div style="width: 100%; height: 85vh"></div>
+          {% endif %}
+        </div>
+      </div>
+      <script src="../static/js/bootstrap.bundle.min.js"></script>
+      <script src="../static/js/jquery-3.7.1.min.js"></script>
+      <script src="../static/js/charts.js"></script>
+    </div>
+  </body>
 </html>
